@@ -1,0 +1,33 @@
+{
+    "name": "devtyping/gateway",
+    "description": "Simple API Gateway",
+    "keywords": ["devtyping", "laravel", "api-gateway", "gateway"],
+    "require": {
+        "php": "^7.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Phuong Phung",
+            "email": "phuongthephung@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "DevTyping\\Gateway\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DevTyping\\Gateway\\APIGatewayProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

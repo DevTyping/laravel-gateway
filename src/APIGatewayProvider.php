@@ -2,7 +2,11 @@
 
 namespace DevTyping\Gateway;
 
+use DevTyping\Gateway\Http\Middleware\RouteMiddleware;
 use Illuminate\Support\ServiceProvider;
+
+// Middleware
+use DevTyping\Gateway\Http\Middleware\ServiceMiddleware;
 
 /**
  * Class APIGatewayProvider
@@ -17,10 +21,15 @@ class APIGatewayProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Publish config
-        $this->publishes([
-            __DIR__ . '/../config/gateway.php' => config_path('gateway.php'),
-        ], 'gateway-config');
+        // Routers
+        $this->loadRoutesFrom(__DIR__ . '/routes.php');
+
+        if ($this->app->runningInConsole()) {
+            // Publish config
+            $this->publishes([
+                __DIR__ . '/../config/gateway.php' => config_path('gateway.php'),
+            ], 'gateway-config');
+        }
     }
 
     /**
@@ -31,5 +40,11 @@ class APIGatewayProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/gateway.php', 'gateway');
+
+        // Middleware
+        $router = $this->app['router'];
+
+        $router->aliasMiddleware('gateway.service.middleware', ServiceMiddleware::class);
+        $router->aliasMiddleware('gateway.route.middleware', RouteMiddleware::class);
     }
 }

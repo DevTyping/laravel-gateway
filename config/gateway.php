@@ -3,7 +3,8 @@
 return [
     // Gateway configurations
     "gateway" => [
-        "prefix" => "agw"
+        "prefix" => "agw",
+        "middleware" => []
     ],
 
     // List of services

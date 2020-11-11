@@ -2,6 +2,7 @@
 
 namespace DevTyping\Gateway\Http\Repository;
 
+use DevTyping\Gateway\Http\Models\Service;
 use Exception;
 use Illuminate\Support\Str;
 
@@ -13,6 +14,10 @@ class GatewayRepository
 {
     private $config = [];
 
+    /**
+     * GatewayRepository constructor.
+     * @param array|null $config
+     */
     public function __construct(?array $config = null)
     {
         if ($config) {
@@ -30,15 +35,22 @@ class GatewayRepository
      */
     public function getService(string $service)
     {
-        if (!array_key_exists('services', $this->config)) {
-            throw new Exception('Services Config is not defined.');
+        $serviceOrm = Service::query()->where('path', $service)->orWhere('path', '/' . $service)->first();
+
+        // If the service does not contain in database, try to get from config
+        if (!$serviceOrm) {
+            if (!array_key_exists('services', $this->config)) {
+                throw new Exception('Services Config is not defined.');
+            }
+
+            if (!array_key_exists($service, $this->config['services'])) {
+                throw new Exception('Service ' . $service . ' not found.');
+            }
+
+            return $this->config['services'][$service];
         }
 
-        if (!array_key_exists($service, $this->config['services'])) {
-            throw new Exception('Service ' . $service . ' not found.');
-        }
-
-        return $this->config['services'][$service];
+        return $serviceOrm;
     }
 
 
@@ -63,15 +75,17 @@ class GatewayRepository
     public function getRouteRoles(string $service, string $endpoint)
     {
         $serviceModel = $this->getService($service);
+        $routes = null;
 
-        if (!array_key_exists('routes', $serviceModel)) {
-            throw new Exception('Routes middleware is not defined.');
+        if (is_array($serviceModel)) {
+            $routes = $serviceModel['routes'];
+        } else {
+            $routes = $serviceModel->routes;
         }
 
         $arrayRoles = [];
 
-        if (count($serviceModel['routes']) > 0) {
-            $routes = $serviceModel['routes'];
+        if (count($routes) > 0) {
             foreach ($routes as $route) {
                 if (array_key_exists('path', $route)) {
                     if (Str::startsWith($endpoint, $route['path'])) {

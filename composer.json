@@ -1,7 +1,12 @@
 {
     "name": "devtyping/gateway",
     "description": "Simple API Gateway",
-    "keywords": ["devtyping", "laravel", "api-gateway", "gateway"],
+    "keywords": [
+        "devtyping",
+        "laravel",
+        "api-gateway",
+        "gateway"
+    ],
     "require": {
         "php": "^7.3"
     },
@@ -21,7 +26,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "DevTyping\\Gateway\\APIGatewayProvider"
+                "DevTyping\\Gateway\\GatewayProvider"
             ]
         }
     },

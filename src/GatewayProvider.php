@@ -9,10 +9,10 @@ use Illuminate\Support\ServiceProvider;
 use DevTyping\Gateway\Http\Middleware\ServiceMiddleware;
 
 /**
- * Class APIGatewayProvider
+ * Class GatewayProvider
  * @package DevTyping\Gateway
  */
-class APIGatewayProvider extends ServiceProvider
+class GatewayProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -29,6 +29,9 @@ class APIGatewayProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/gateway.php' => config_path('gateway.php'),
             ], 'gateway-config');
+
+            // Register Migrations
+            $this->registerMigrations();
         }
     }
 
@@ -46,5 +49,13 @@ class APIGatewayProvider extends ServiceProvider
 
         $router->aliasMiddleware('gateway.service.middleware', ServiceMiddleware::class);
         $router->aliasMiddleware('gateway.route.middleware', RouteMiddleware::class);
+    }
+
+
+    /**
+     * Register the API Gateway's migration files
+     */
+    public function registerMigrations() {
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
 }

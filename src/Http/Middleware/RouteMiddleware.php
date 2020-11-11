@@ -26,8 +26,14 @@ class RouteMiddleware extends BaseMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $routeRoles = (new GatewayRepository())->getRouteRoles($request->route('service'), $request->route('endpoint'));
-        $this->checkByRole($routeRoles);
-        return $next($request);
+        try {
+            $routeRoles = (new GatewayRepository())->getRouteRoles($request->route('service'), $request->route('endpoint'));
+            if (count($routeRoles) > 0) {
+                $this->checkByRole($routeRoles);
+            }
+            return $next($request);
+        } catch (Exception $e) {
+            return $this->responseError($e->getMessage(), $e->getCode());
+        }
     }
 }

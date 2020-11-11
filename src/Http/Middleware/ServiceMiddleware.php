@@ -11,6 +11,10 @@ use Closure;
 // Exceptions
 use Exception;
 
+/**
+ * Class ServiceMiddleware
+ * @package DevTyping\Gateway\Http\Middleware
+ */
 class ServiceMiddleware extends BaseMiddleware
 {
 
@@ -22,8 +26,14 @@ class ServiceMiddleware extends BaseMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $serviceRoles = (new GatewayRepository())->getRoles($request->route('service'));
-        $this->checkByRole($serviceRoles);
-        return $next($request);
+        try {
+            $serviceRoles = (new GatewayRepository())->getRoles($request->route('service'));
+            if (count($serviceRoles) > 0) {
+                $this->checkByRole($serviceRoles);
+            }
+            return $next($request);
+        } catch (Exception $e) {
+            return $this->responseError($e->getMessage(), $e->getCode());
+        }
     }
 }

@@ -7,9 +7,9 @@ return [
         "middleware" => []
     ],
 
-    // List of services
-    'services' => [],
-
-    // Except paths
-    "except_paths" => []
+    // Gateway Admin Configurations
+    "gateway_admin" => [
+        "prefix" => "agw_admin",
+        "middleware" => []
+    ],
 ];

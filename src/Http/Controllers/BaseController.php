@@ -3,9 +3,7 @@
 namespace DevTyping\Gateway\Http\Controllers;
 
 use DevTyping\Gateway\Http\Repository\GatewayRepository;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as Controller;
 
 // Exceptions
 use Exception;
@@ -28,22 +26,7 @@ class BaseController extends Controller
         try {
             $this->service = (new GatewayRepository())->getService($request->route('service'));
         } catch (Exception $e) {
-            $this->responseError($e->getMessage(), 401);
+            $this->responseError($e->getMessage(), $e->getCode());
         }
-    }
-
-    /**
-     * @param string $message
-     * @param int $httpStatusCode
-     * @return JsonResponse
-     */
-    public function responseError(string $message = "", int $httpStatusCode = 500)
-    {
-        return response()->json([
-            "error" => [
-                "type" => "AGWException",
-                "message" => $message
-            ],
-        ], $httpStatusCode ? $httpStatusCode : 500);
     }
 }

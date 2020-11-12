@@ -20,8 +20,14 @@ class Service extends Model
 
     protected $casts = [
         'routes' => 'array',
-        'roles' => 'array'
+        'roles' => 'array',
+        'defaults' => 'array'
     ];
+
+    protected $attributes = [
+        'defaults' => '{}'
+    ];
+
     protected $fillable = [
         'id',
         'name',
@@ -33,6 +39,7 @@ class Service extends Model
         'connect_timeout',
         'routes',
         'roles',
+        'defaults'
     ];
 
 

@@ -68,7 +68,8 @@ class ServiceController extends Controller
                 'roles' => ['required', 'array'],
                 'port' => 'required',
                 'connect_timeout' => 'required',
-                'routes' => ['array']
+                'routes' => ['array'],
+                'defaults' => ['array']
             ]);
 
             $service = Service::query()->create($validatedData);

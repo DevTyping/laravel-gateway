@@ -22,6 +22,7 @@ class CreateServicesTable extends Migration
             $table->string('protocol');
             $table->integer('port');
             $table->text('roles');
+            $table->text('defaults');
             $table->integer('connect_timeout');
             $table->text('routes');
             $table->timestamps();
